@@ -31,6 +31,7 @@ kSleepValueMap = {
     "30 min": "n30",
 }
 
+
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1", "on")
 
@@ -54,6 +55,7 @@ class ClassicReceiver(object):
         ('net_radio', 'NET RADIO'),
         ('usb', 'USB'),
     )
+
     @staticmethod
     def xmitToReceiver(dev, xml_string):
         url = 'http://' + dev.pluginProps['txtip'] + '/YamahaRemoteControl/ctrl'
@@ -266,7 +268,8 @@ class Plugin(indigo.PluginBase):
             dev = devTup[0]
             if dev.deviceTypeId == "receiver":
                 xml_string = '<YAMAHA_AV cmd="GET"><Main_Zone><Basic_Status>GetParam</Basic_Status></Main_Zone></YAMAHA_AV>'
-                root = ClassicReceiver.xmitToReceiver(dev, xml_string)
+                xml_bytes = xml_string.encode("utf8")
+                root = ClassicReceiver.xmitToReceiver(dev, xml_bytes)
                 power = root.find("./Main_Zone/Basic_Status/Power_Control/Power").text
                 sleep = root.find("./Main_Zone/Basic_Status/Power_Control/Sleep").text
                 if sleep != 'Off':
